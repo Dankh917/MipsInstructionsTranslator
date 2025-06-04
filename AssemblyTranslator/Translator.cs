@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -10,7 +11,7 @@ namespace AssemblyTranslator
 	static class Translator
 	{
 
-		static public string Translate(Type type, string mipsFunction, string rd,string rs, string rt, string shAmt="00000",string op="000000")
+		static public string TranslateR(Type type, string mipsFunction, string rd,string rs, string rt, string shAmt="00000",string op="000000")
 		{
 			bool allExist = new[] { rd, rs, rt }.All(k => mipsRegisters.ContainsKey(k)) && Functions.ContainsKey(mipsFunction);
 			//Check passed values
@@ -19,30 +20,41 @@ namespace AssemblyTranslator
 				return "INVALID params rd,ts,rt OR INVALID mipsFunction";
 			}
 			
-			if(type == Type.R)
+			string result;
+			op = "000000";
+			result = op + mipsRegisters.GetValueOrDefault(rs) + mipsRegisters.GetValueOrDefault(rt) + mipsRegisters.GetValueOrDefault(rd) 
+				+ shAmt + Functions.GetValueOrDefault(mipsFunction);
+
+
+			uint toConvert = Convert.ToUInt32(result, 2);
+			string addOn16Base = toConvert.ToString("X8");
+
+
+			result = "Binary val: "+result + "\nHex val: " + addOn16Base;
+
+
+			return result;
+			
+		}
+
+		static public string TranslateI(Type type, string op, string rt, string rs, string con)
+		{
+			if (true)//op logic goes here
 			{
 				string result;
-				op = "000000";
-				result = op + mipsRegisters.GetValueOrDefault(rs) + mipsRegisters.GetValueOrDefault(rt) + mipsRegisters.GetValueOrDefault(rd) 
-					+ shAmt + Functions.GetValueOrDefault(mipsFunction);
-
-
-				uint toConvert = Convert.ToUInt32(result, 2);
-				string addOn16Base = toConvert.ToString("X8");
-
-
-				result = "Binary val: "+result + "\nHex val: " + addOn16Base;
-
+				result = Functions.GetValueOrDefault(op) + mipsRegisters.GetValueOrDefault(rs) + mipsRegisters.GetValueOrDefault(rt)
+					+ Convert.ToString(Convert.ToInt16(con), 2).PadLeft(16, '0');
 
 				return result;
 			}
 			else
 			{
-				return "fail";
-			} 
-			//else here
+
+			}
+			
 		}
-		
+
+
 		static Dictionary<string, string> mipsRegisters = new Dictionary<string, string>
 		{
 			["$zero"] = Convert.ToString(0, 2).PadLeft(5, '0'),
