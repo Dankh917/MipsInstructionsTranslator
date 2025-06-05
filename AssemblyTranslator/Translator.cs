@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace AssemblyTranslator
 	static class Translator
 	{
 
-		static public string TranslateR(Type type, string mipsFunction, string rd,string rs, string rt, string shAmt="00000",string op="000000")
+		static public string TranslateR(string mipsFunction, string rd,string rs, string rt, string shAmt="00000",string op="000000")
 		{
 			bool allExist = new[] { rd, rs, rt }.All(k => mipsRegisters.ContainsKey(k)) && Functions.ContainsKey(mipsFunction);
 			//Check passed values
@@ -37,19 +38,38 @@ namespace AssemblyTranslator
 			
 		}
 
-		static public string TranslateI(Type type, string op, string rt, string rs, string con)
+		static public string TranslateI(string op, string rt, string rs, string con)
 		{
-			if (true)//op logic goes here
+			if (Functions.GetValueOrDefault(op).Contains('i'))//checks if we have an "i" in the mips function name if we do-
+															  //we need to behave diffrently than with sw or lw functions
 			{
+				Console.WriteLine("1!!");
 				string result;
 				result = Functions.GetValueOrDefault(op) + mipsRegisters.GetValueOrDefault(rs) + mipsRegisters.GetValueOrDefault(rt)
 					+ Convert.ToString(Convert.ToInt16(con), 2).PadLeft(16, '0');
+
+				uint toConvert = Convert.ToUInt32(result, 2);
+				string addOn16Base = toConvert.ToString("X8");
+
+
+				result = $"Translation of {op} {rt},{rs},{con} :" + "\nBinary val: " + result + "\nHex val: " + addOn16Base;
 
 				return result;
 			}
 			else
 			{
+				Console.WriteLine("2!!");
+				string result;
+				result = Functions.GetValueOrDefault(op) + mipsRegisters.GetValueOrDefault(rt) + mipsRegisters.GetValueOrDefault(rs)
+					+ Convert.ToString(Convert.ToInt16(con), 2).PadLeft(16, '0');
 
+				uint toConvert = Convert.ToUInt32(result, 2);
+				string addOn16Base = toConvert.ToString("X8");
+
+
+				result = $"Translation of {op} {rt},{con}({rs}) :" + "\nBinary val: " + result + "\nHex val: " + addOn16Base;
+
+				return result;
 			}
 			
 		}
@@ -57,7 +77,7 @@ namespace AssemblyTranslator
 
 		static Dictionary<string, string> mipsRegisters = new Dictionary<string, string>
 		{
-			["$zero"] = Convert.ToString(0, 2).PadLeft(5, '0'),
+			["$0"] = Convert.ToString(0, 2).PadLeft(5, '0'),
 			["$at"] = Convert.ToString(1, 2).PadLeft(5, '0'),
 			["$v0"] = Convert.ToString(2, 2).PadLeft(5, '0'),
 			["$v1"] = Convert.ToString(3, 2).PadLeft(5, '0'),
@@ -172,9 +192,4 @@ namespace AssemblyTranslator
 
 }
 
-enum Type
-{
-	R,
-	I
-}
 
