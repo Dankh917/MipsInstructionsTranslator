@@ -43,7 +43,7 @@ namespace AssemblyTranslator
 			if (Functions.GetValueOrDefault(op).Contains('i'))//checks if we have an "i" in the mips function name if we do-
 															  //we need to behave diffrently than with sw or lw functions
 			{
-				Console.WriteLine("1!!");
+				
 				string result;
 				result = Functions.GetValueOrDefault(op) + mipsRegisters.GetValueOrDefault(rs) + mipsRegisters.GetValueOrDefault(rt)
 					+ Convert.ToString(Convert.ToInt16(con), 2).PadLeft(16, '0');
@@ -58,7 +58,7 @@ namespace AssemblyTranslator
 			}
 			else
 			{
-				Console.WriteLine("2!!");
+				
 				string result;
 				result = Functions.GetValueOrDefault(op) + mipsRegisters.GetValueOrDefault(rt) + mipsRegisters.GetValueOrDefault(rs)
 					+ Convert.ToString(Convert.ToInt16(con), 2).PadLeft(16, '0');
