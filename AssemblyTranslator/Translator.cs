@@ -21,18 +21,19 @@ namespace AssemblyTranslator
 				return "INVALID params rd,ts,rt OR INVALID mipsFunction";
 			}
 			
-			string result;
+			string binaryVal;
 			op = "000000";
-			result = op + mipsRegisters.GetValueOrDefault(rs) + mipsRegisters.GetValueOrDefault(rt) + mipsRegisters.GetValueOrDefault(rd) 
+			binaryVal = op + mipsRegisters.GetValueOrDefault(rs) + mipsRegisters.GetValueOrDefault(rt) + mipsRegisters.GetValueOrDefault(rd) 
 				+ shAmt + Functions.GetValueOrDefault(mipsFunction);
 
 
-			uint toConvert = Convert.ToUInt32(result, 2);
+			uint toConvert = Convert.ToUInt32(binaryVal, 2);
 			string addOn16Base = toConvert.ToString("X8");
 
 
-			result = "Binary val: "+result + "\nHex val: " + addOn16Base;
-
+			string result;
+			
+			result = $"Translation of {mipsFunction} {rd},{rs},{rt} :" + "\nBinary val: " + binaryVal + "\nHex val: " + addOn16Base;
 
 			return result;
 			
@@ -40,34 +41,34 @@ namespace AssemblyTranslator
 
 		static public string TranslateI(string op, string rt, string rs, string con)
 		{
-			if (Functions.GetValueOrDefault(op).Contains('i'))//checks if we have an "i" in the mips function name if we do-
+			if (op.Contains('i'))//checks if we have an "i" in the mips function name if we do-
 															  //we need to behave diffrently than with sw or lw functions
 			{
 				
-				string result;
-				result = Functions.GetValueOrDefault(op) + mipsRegisters.GetValueOrDefault(rs) + mipsRegisters.GetValueOrDefault(rt)
+				string binaryVal;
+				binaryVal = Functions.GetValueOrDefault(op) + mipsRegisters.GetValueOrDefault(rs) + mipsRegisters.GetValueOrDefault(rt)
 					+ Convert.ToString(Convert.ToInt16(con), 2).PadLeft(16, '0');
 
-				uint toConvert = Convert.ToUInt32(result, 2);
+				uint toConvert = Convert.ToUInt32(binaryVal, 2);
 				string addOn16Base = toConvert.ToString("X8");
 
 
-				result = $"Translation of {op} {rt},{rs},{con} :" + "\nBinary val: " + result + "\nHex val: " + addOn16Base;
+				string result = $"Translation of {op} {rt},{rs},{con} :" + "\nBinary val: " + binaryVal + "\nHex val: " + addOn16Base;
 
 				return result;
 			}
 			else
 			{
 				
-				string result;
-				result = Functions.GetValueOrDefault(op) + mipsRegisters.GetValueOrDefault(rt) + mipsRegisters.GetValueOrDefault(rs)
+				string binaryVal;
+				binaryVal = Functions.GetValueOrDefault(op) + mipsRegisters.GetValueOrDefault(rt) + mipsRegisters.GetValueOrDefault(rs)
 					+ Convert.ToString(Convert.ToInt16(con), 2).PadLeft(16, '0');
 
-				uint toConvert = Convert.ToUInt32(result, 2);
+				uint toConvert = Convert.ToUInt32(binaryVal, 2);
 				string addOn16Base = toConvert.ToString("X8");
 
 
-				result = $"Translation of {op} {rt},{con}({rs}) :" + "\nBinary val: " + result + "\nHex val: " + addOn16Base;
+				string result = $"Translation of {op} {rt},{con}({rs}) :" + "\nBinary val: " + binaryVal + "\nHex val: " + addOn16Base;
 
 				return result;
 			}

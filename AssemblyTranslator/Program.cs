@@ -4,13 +4,18 @@
     {
         static void Main(string[] args)
         {
-            //string outPut = Translator.Translate(Type.R, "add", "$t0", "$s1", "$s2");
-            //string outPut2 = Translator.TranslateR( "sub", "$t0", "$s1", "$t4");
-            //string outPut = Translator.TranslateI( "addi", "$s0", "$s1", "5");
-            string outPut = Translator.TranslateI( "lw", "$t2", "$0", "32");
-            //Console.WriteLine(outPut2);
-            //Console.WriteLine(outPut);
-            Console.WriteLine(outPut);
+            //example for R type mips function
+            string outPut1 = Translator.TranslateR("sub", "$t0", "$t3", "$t5");
+			Console.WriteLine(outPut1);
+
+			//example for I type mips function with immidiate val
+			string outPut2 = Translator.TranslateI("addi", "$s0", "$s1", "5");
+			Console.WriteLine(outPut2);
+
+			////example for I type mips function with the sw or lw memory and offset
+			string outPut3 = Translator.TranslateI("lw", "$t2", "$0", "32");
+			Console.WriteLine(outPut3);
+		
         }
     }
 }
